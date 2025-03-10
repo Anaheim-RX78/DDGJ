@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "AbstractProp.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPropDestroy, AAbstractProp*, Prop);
+
 UCLASS()
 class DDGJ_API AAbstractProp : public AActor
 {
@@ -104,4 +106,7 @@ protected:
 	 */
 	UPROPERTY(EditAnywhere, Category="Behavior")
 	bool Explosive = false;
+
+	UPROPERTY(BlueprintAssignable, Category="Events")
+	FPropDestroy OnDestroy;
 };
