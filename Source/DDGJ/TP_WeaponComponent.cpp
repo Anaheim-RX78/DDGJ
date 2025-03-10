@@ -18,7 +18,7 @@ UTP_WeaponComponent::UTP_WeaponComponent()
 }
 
 
-void UTP_WeaponComponent::Fire()
+void UTP_WeaponComponent::Fire(TSubclassOf<ADDGJProjectile> ProjectileClass)
 {
 	if (Character == nullptr || Character->GetController() == nullptr)
 	{
@@ -63,6 +63,16 @@ void UTP_WeaponComponent::Fire()
 	}
 }
 
+void UTP_WeaponComponent::FireFirst()
+{
+	Fire(FirstProjectileClass);
+}
+
+void UTP_WeaponComponent::FireSecond()
+{
+	Fire(SecondProjectileClass);
+}
+
 void UTP_WeaponComponent::AttachWeapon(ADDGJCharacter* TargetCharacter)
 {
 	Character = TargetCharacter;
@@ -92,7 +102,8 @@ void UTP_WeaponComponent::AttachWeapon(ADDGJCharacter* TargetCharacter)
 		if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerController->InputComponent))
 		{
 			// Fire
-			EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::Fire);
+			EnhancedInputComponent->BindAction(FirstFireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::FireFirst);
+			EnhancedInputComponent->BindAction(SecondFireAction, ETriggerEvent::Triggered, this, &UTP_WeaponComponent::FireSecond);
 		}
 	}
 }

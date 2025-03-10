@@ -16,7 +16,10 @@ class DDGJ_API UTP_WeaponComponent : public USkeletalMeshComponent
 public:
 	/** Projectile class to spawn */
 	UPROPERTY(EditDefaultsOnly, Category=Projectile)
-	TSubclassOf<class ADDGJProjectile> ProjectileClass;
+	TSubclassOf<class ADDGJProjectile> FirstProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category=Projectile)
+	TSubclassOf<class ADDGJProjectile> SecondProjectileClass;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Gameplay)
@@ -36,7 +39,10 @@ public:
 
 	/** Fire Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	class UInputAction* FireAction;
+	class UInputAction* FirstFireAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
+	class UInputAction* SecondFireAction;
 
 	/** Sets default values for this component's properties */
 	UTP_WeaponComponent();
@@ -47,7 +53,13 @@ public:
 
 	/** Make the weapon Fire a Projectile */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
-	void Fire();
+	void Fire(TSubclassOf<ADDGJProjectile> ProjectileClass);
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void FireFirst();
+
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void FireSecond();
 
 protected:
 	/** Ends gameplay for this component. */
