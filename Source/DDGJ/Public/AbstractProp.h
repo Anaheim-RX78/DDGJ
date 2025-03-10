@@ -38,6 +38,34 @@ public:
 	UFUNCTION()
 	void SetHealth(const float PHealth) { this->Health = PHealth; }
 
+	/**
+	 * Gets the kill points awarded for destroying the prop.
+	 * @return The current kill points value.
+	 */
+	UFUNCTION()
+	int GetKillPoints() const { return this->KillPoints; }
+
+	/**
+	 * Sets the kill points awarded for destroying the prop.
+	 * @param PKillPoints - The new kill points value to set.
+	 */
+	UFUNCTION()
+	void SetKillPoints(const int PKillPoints) { this->KillPoints = PKillPoints; }
+
+	/**
+	 * Checks if the prop is explosive.
+	 * @return True if the prop is explosive, false otherwise.
+	 */
+	UFUNCTION()
+	bool IsExplosive() const { return this->Explosive; }
+
+	/**
+	 * Sets whether the prop is explosive.
+	 * @param PExplosive - True to make the prop explosive, false otherwise.
+	 */
+	UFUNCTION()
+	void SetExplosive(const bool PExplosive) { this->Explosive = PExplosive; }
+
 protected:
 	/**
 	 * Called when the game starts or when spawned.
@@ -69,4 +97,11 @@ protected:
 	 */
 	UPROPERTY(EditAnywhere, Category="Score")
 	int KillPoints = 25;
+
+	/**
+	 * Determines if the prop is explosive.
+	 * If true, the prop will explode upon destruction.
+	 */
+	UPROPERTY(EditAnywhere, Category="Behavior")
+	bool Explosive = false;
 };
