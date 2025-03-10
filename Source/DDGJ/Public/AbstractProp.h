@@ -14,7 +14,8 @@ class DDGJ_API AAbstractProp : public AActor
 {
 	GENERATED_BODY()
 
-public:
+public
+
 	/**
 	* Default constructor for AAbstractProp.
 	*/
@@ -39,6 +40,12 @@ public:
 	 */
 	UFUNCTION()
 	void SetHealth(const float PHealth) { this->Health = PHealth; }
+
+	UFUNCTION()
+	void ResetHealth() { this->Health = 0; }
+
+	UFUNCTION()
+	void GetDamage(const float PHealth);
 
 	/**
 	 * Gets the kill points awarded for destroying the prop.
@@ -67,6 +74,9 @@ public:
 	 */
 	UFUNCTION()
 	void SetExplosive(const bool PExplosive) { this->Explosive = PExplosive; }
+
+	UFUNCTION()
+	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 protected:
 	/**
