@@ -14,8 +14,7 @@ class DDGJ_API AAbstractProp : public AActor
 {
 	GENERATED_BODY()
 
-public
-
+public:
 	/**
 	* Default constructor for AAbstractProp.
 	*/
