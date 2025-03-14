@@ -9,6 +9,8 @@
 /**
  * 
  */
+
+
 UCLASS()
 class DDGJ_API UStatsSubsystem : public UGameInstanceSubsystem
 {
@@ -24,4 +26,5 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int LatestScore = 0;
+
 };

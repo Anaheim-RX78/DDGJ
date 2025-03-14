@@ -1,17 +1,16 @@
 #include "AbstractProp.h"
 
+#include "KismetTraceUtils.h"
+#include "DDGJ/DDGJGameMode.h"
 #include "DDGJ/DDGJProjectile.h"
+#include "GameFramework/GameMode.h"
 
 AAbstractProp::AAbstractProp()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	this->Mesh = this->CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
-
-	this->CapsuleComponent = this->CreateDefaultSubobject<UCapsuleComponent>("Capsule");
-	this->CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AAbstractProp::OnBeginOverlap);
-	this->Mesh->SetupAttachment(this->CapsuleComponent);
-
-	this->SetRootComponent(this->CapsuleComponent);
+	
+	Mesh = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
+	Mesh->SetupAttachment(RootComponent);
 }
 
 void AAbstractProp::BeginPlay()
@@ -24,28 +23,17 @@ void AAbstractProp::Tick(const float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AAbstractProp::GetDamage(const float PHealth)
+void AAbstractProp::DoDamage(float Amount, bool ExplosiveDamage)
 {
-	if (this->GetHealth() - PHealth > 0)
+	Health = Health - Amount;
+	
+	if (Health < 0 || (ExplosiveDamage && Explosive))
 	{
-		this->SetHealth(this->GetHealth() - PHealth);
-		const FString Message = FString::Printf(TEXT("Damage: %.2f"), PHealth);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Message);
+		Health = 0;
+		OnDeath();
+		Destroy();
+		ADDGJGameMode* MyGameMode = Cast<ADDGJGameMode>(GetWorld()->GetAuthGameMode());
+		MyGameMode->AddScore(KillPoints);
 	}
-	else
-	{
-		this->ResetHealth();
-		this->OnDestroy.Broadcast(this);
-	}
-}
-
-void AAbstractProp::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-                                   UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	ADDGJProjectile* Projectile = Cast<ADDGJProjectile>(OtherActor);
-
-	if (IsValid(Projectile))
-	{
-		this->GetDamage(Projectile->GetDamage());
-	}
+	
 }

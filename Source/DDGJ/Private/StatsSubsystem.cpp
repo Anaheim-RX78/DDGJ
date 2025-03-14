@@ -5,8 +5,5 @@
 
 void UStatsSubsystem::UpdateBestScore(int NewScore)
 {
-	if (NewScore > BestScore)
-	{
-		BestScore = NewScore;
-	}
+	BestScore = BestScore + NewScore;
 }

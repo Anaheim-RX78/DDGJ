@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "DDGJProjectile.h"
+
+#include "DamageInterface.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 
@@ -33,11 +35,21 @@ ADDGJProjectile::ADDGJProjectile()
 
 void ADDGJProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		if (IDamageInterface* Damagable = Cast<IDamageInterface>(OtherActor))
+		{
+			Damagable->DoDamage(Damage, Explosive);
+			const FString Message = FString::Printf(TEXT("Damage: %.2f"), Damage);
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, Message);
 
-		Destroy();
+		}
+		// Only add impulse and destroy projectile if we hit a physics
+		if (OtherComp->IsSimulatingPhysics())
+		{
+			OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+
+			Destroy();
+		}
 	}
 }

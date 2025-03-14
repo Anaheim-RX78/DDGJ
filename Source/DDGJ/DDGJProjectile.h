@@ -34,11 +34,11 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
-	UFUNCTION()
-	float GetDamage() const { return this->Damage; }
-
 protected:
 	UPROPERTY(EditAnywhere, Category="Damage")
 	float Damage = 25.0f;
+
+	UPROPERTY(EditAnywhere, Category="Damage")
+	bool Explosive = false;
 };
 

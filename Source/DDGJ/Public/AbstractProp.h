@@ -3,14 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DamageInterface.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Actor.h"
 #include "AbstractProp.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPropDestroy, AAbstractProp*, Prop);
-
 UCLASS()
-class DDGJ_API AAbstractProp : public AActor
+class DDGJ_API AAbstractProp : public AActor, public IDamageInterface
 {
 	GENERATED_BODY()
 
@@ -25,26 +24,6 @@ public:
 	* @param DeltaTime - The time elapsed since the last frame.
 	*/
 	virtual void Tick(float DeltaTime) override;
-
-	/**
-	 * Gets the health of the prop.
-	 * @return The current health value.
-	 */
-	UFUNCTION()
-	float GetHealth() const { return this->Health; }
-
-	/**
-	 * Sets the health of the prop.
-	 * @param PHealth - The new health value to set.
-	 */
-	UFUNCTION()
-	void SetHealth(const float PHealth) { this->Health = PHealth; }
-
-	UFUNCTION()
-	void ResetHealth() { this->Health = 0; }
-
-	UFUNCTION()
-	void GetDamage(const float PHealth);
 
 	/**
 	 * Gets the kill points awarded for destroying the prop.
@@ -74,9 +53,6 @@ public:
 	UFUNCTION()
 	void SetExplosive(const bool PExplosive) { this->Explosive = PExplosive; }
 
-	UFUNCTION()
-	void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 protected:
 	/**
 	 * Called when the game starts or when spawned.
@@ -88,12 +64,6 @@ protected:
 	 */
 	UPROPERTY(EditAnywhere, Category="Model")
 	UStaticMeshComponent* Mesh;
-
-	/**
-	 * Capsule component for the prop.
-	 */
-	UPROPERTY(EditAnywhere, Category="Model")
-	UCapsuleComponent* CapsuleComponent;
 
 	/**
 	 * Health property for the prop.
@@ -113,9 +83,11 @@ protected:
 	 * Determines if the prop is explosive.
 	 * If true, the prop will explode upon destruction.
 	 */
-	UPROPERTY(EditAnywhere, Category="Behavior")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Behavior")
 	bool Explosive = false;
 
-	UPROPERTY(BlueprintAssignable, Category="Events")
-	FPropDestroy OnDestroy;
+	virtual void DoDamage(float Amount, bool Explosive) override;
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDeath();
 };

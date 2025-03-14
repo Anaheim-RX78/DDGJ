@@ -13,6 +13,9 @@ class ADDGJGameMode : public AGameModeBase
 
 public:
 	ADDGJGameMode();
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddScore(float Amount);
 };
 
 
